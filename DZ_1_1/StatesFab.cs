@@ -99,6 +99,14 @@ namespace DZ_1_1
             Console.WriteLine($"Новая позиция: {newNowState}");
         }
 
+        private static void Step_v2()
+        {
+            int genNum = random.Next(0, 100);
+            int newNowState = NowState.GetNextState_v2(genNum);
+            NowState = States[newNowState];
+            Console.WriteLine($"Новая позиция: {newNowState}");
+        }
+
         public static void Play()
         {
             for (int i = 0; i < IterCount; i++)
@@ -122,6 +130,41 @@ namespace DZ_1_1
                 for (int j = 0; j < StepCount; j++)
                 {
                     Step();
+                    ListOfCounter[NowState.GetID()]++;
+                    ListOfTransition.Add(NowState.GetID());
+                }
+
+                // Запомнили листы в листы листов
+                ListOfListOfCounter.Add(new List<int>(ListOfCounter));
+                ListOfListOfTransition.Add(new List<int>(ListOfTransition));
+            }
+
+        }
+
+        public static void Play_v2()
+        {
+            for (int i = 0; i < 150; i++)
+            {
+                ListOfCounter.Clear();
+                ListOfTransition.Clear();
+                // Отчистили листы
+
+
+                // Создали лист с StatesCount счетчиками
+                for (int j = 0; j < StatesCount; j++)
+                {
+                    ListOfCounter.Add(0);
+                }
+
+                // Рандомно выбрали начальную позицию и записали ее во все списки
+                Console.WriteLine($"\nСтартовая позиция: {i/10}");
+                NowState = States[i/10];
+                ListOfCounter[NowState.GetID()]++;
+                ListOfTransition.Add(NowState.GetID());
+
+                for (int j = 0; j < StepCount; j++)
+                {
+                    Step_v2();
                     ListOfCounter[NowState.GetID()]++;
                     ListOfTransition.Add(NowState.GetID());
                 }
@@ -157,7 +200,7 @@ namespace DZ_1_1
                 {
                     foreach (int counter in listofcounter)
                     {
-                        double del = (double)(counter) / 100.0;
+                        double del = (double)(counter) / 101.0;
                         file.Write(del);
                         file.Write('\t');
                     }

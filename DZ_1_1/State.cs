@@ -63,6 +63,45 @@ namespace DZ_1_1
             return nextStep;
         }
 
+        public int GetNextState_v2(int rnd)
+        {
+            int nextStep = -1;
+            int nowSum = 0;
+            try
+            {
+                for (int i = 0; i < Probabilities.Count; i++)
+                {
+                    double res = (Probabilities[i] * 1000.0);
+                    int testing = (int)res;
+                    int konets = testing % 10;
+                    if (konets >= 8)
+                    {
+                        testing = (testing / 10) + 1;
+                    }
+                    else
+                    {
+                        testing = testing / 10;
+                    }
+                    nowSum += testing;
+                    if (rnd < nowSum)
+                    {
+                        nextStep = i;
+                        break;
+                    }
+                }
+                if ((rnd < 0) || (nextStep == -1) || (rnd>=100))
+                {
+                    throw new Exception("Ошибка GetNextState");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            // Console.WriteLine(nextStep);
+            return nextStep;
+        }
+
         public int GetID()
         {
             return id;
@@ -70,7 +109,13 @@ namespace DZ_1_1
 
         public void Print()
         {
-            Console.WriteLine($"State : {id}\nParams : \n0 : {Probabilities[0]} 1 : {Probabilities[1]} 2 : {Probabilities[2]} 3 : {Probabilities[3]} 4 : {Probabilities[4]}");
+            Console.WriteLine($"State : {id}\nParams : ");
+            Console.WriteLine($"Sum : {Probabilities.Sum()}");
+            for (int i = 0; i < Probabilities.Count; i++)
+            {
+                Console.Write($"{i} : {Probabilities[i]}  ");
+            }
+            Console.WriteLine();
         }
     }
 }
